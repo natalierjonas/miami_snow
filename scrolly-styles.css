@@ -57,42 +57,43 @@
 }
 
 @media (max-width: 768px) {
-    /* Graph pins to top of screen, compact */
+    /* Graph sticks to top, only takes top 40% of screen */
     .sticky-thing {
-        height: 100vh;
-        align-items: flex-start;
-        padding-top: 1rem;
+        height: 40vh;
+        align-items: center;
+        padding-top: 0;
     }
 
     .sticky-thing img {
         max-width: 95%;
-        max-height: 38vh;
+        max-height: 36vh;
     }
 
-    /* Keep full overlap so scrollytelling works */
+    /* No overlap — text flows below the sticky graph */
     .steps-container {
-        margin-top: -100vh;
+        margin-top: 0;
     }
 
-    /* Text cards sit at the bottom of the viewport */
     .step {
-        min-height: 100vh;
-        align-items: flex-end;
-        padding: 0 1rem 2rem;
+        min-height: 80vh;
+        align-items: flex-start;
+        padding: 1em 1rem;
+        margin-bottom: 0;
     }
 
-    .step:nth-child(odd) {
-        justify-content: center;
-        padding-left: 1rem;
+    .step:last-child {
+        margin-bottom: 0;
     }
 
+    .step:nth-child(odd),
     .step:nth-child(even) {
         justify-content: center;
+        padding-left: 1rem;
         padding-right: 1rem;
     }
 
     .step > * {
         max-width: 100%;
-        font-size: 0.85em;
+        font-size: 0.9em;
     }
 }
