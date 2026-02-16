@@ -80,7 +80,6 @@
             color: #346658;
         }
 
-        /* Snow animation */
         #snowfall {
             position: fixed;
             top: 0;
@@ -133,23 +132,69 @@
             background: #fff880;
         }
 
-        /* margin on mobile */
-        @media (max-width: 640px) {
+        .step {
+            margin-bottom: 70vh;
+        }
+
+        .step:last-child {
+            margin-bottom: 5vh;
+        }
+
+        /* ===== MOBILE ONLY FIXES (DOES NOT AFFECT DESKTOP) ===== */
+        @media (max-width: 768px) {
+
+            html, body {
+                overflow-x: hidden;
+            }
+
             body {
-                font-size: 18px;
+                font-size: 17px;
+            }
+
+            h1 {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .subhead {
+                margin-left: 0;
+                margin-right: 0;
+                max-width: 100%;
             }
 
             .content {
-                padding-left: 0.5em;
-                padding-right: 0.5em;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .scrolly-container {
+                display: block;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .sticky-thing {
+                position: relative;
+                top: auto;
+                margin-bottom: 1rem;
+            }
+
+            .step {
+                margin-bottom: 40vh;
             }
         }
     </style>
+
     <link href="scrolly-styles.css" rel="stylesheet">
     <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.3.0/d3.min.js"></script>
 </head>
+
+<body>
+    <!-- Your entire original body remains unchanged below -->
+</body>
+</html>
 
 <body>
     <div id="snowfall"></div>
@@ -182,7 +227,7 @@
                 <p>When New York City was hit with a blizzard in late January, the associated prediction market became the largest climate-related market ever on Kalshi. According to Barron's, approximately $5.1 million was traded. The Miami snow market in January 2026 had a potential trading volume of $433k — though only $9,435 was actually moved into the market.</p>
             </div>
             <div class="step" id="step-five">
-                <p>brand.range opened his Kalshi account in January 2026. He bet big, wagering $1,378 on just about 69,000 contracts favorable to the potentiality of snowfall in Miami. brand.range quickly got cold feet, dumping a majority of his contracts at a major loss. If he won, he would have made nearly $69,000 on account of the 2% market probability.</p>
+                <p>A user called "brand.range" opened his Kalshi account in January 2026. He bet big, wagering $1,378 on just about 69,000 contracts favorable to the event of at least 0.1 of an in (or more) of snowfall in Miami. brand.range quickly got cold feet, dumping a majority of his contracts at a major loss. If he won, he would have made nearly $69,000 on account of the 2% market probability.</p>
             </div>
         </div>
     </section>
