@@ -140,48 +140,55 @@
             margin-bottom: 5vh;
         }
 
-        /* ===== MOBILE ONLY FIXES (DOES NOT AFFECT DESKTOP) ===== */
-        @media (max-width: 768px) {
+@media (max-width: 768px) {
 
-            html, body {
-                overflow-x: hidden;
-            }
+    html, body {
+        overflow-x: hidden;
+    }
 
-            body {
-                font-size: 17px;
-            }
+    body {
+        font-size: 17px;
+    }
 
-            h1 {
-                margin-left: 0;
-                margin-right: 0;
-            }
+    h1 {
+        margin-left: 0;
+        margin-right: 0;
+    }
 
-            .subhead {
-                margin-left: 0;
-                margin-right: 0;
-                max-width: 100%;
-            }
+    .subhead {
+        margin-left: 0;
+        margin-right: 0;
+        max-width: 100%;
+    }
 
-            .content {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
+    .content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 
-            .scrolly-container {
-                display: block;
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
+    .scrolly-container {
+        flex-direction: column;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 
-            .sticky-thing {
-                position: relative;
-                top: auto;
-                margin-bottom: 1rem;
-            }
+    .sticky-thing {
+        position: relative;
+        top: auto;
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
 
-            .step {
-                margin-bottom: 40vh;
-            }
+    #graph-main,
+    #graph-whale {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .step {
+        margin-bottom: 45vh;
+    }
         }
     </style>
 
@@ -190,11 +197,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.3.0/d3.min.js"></script>
 </head>
-
-<body>
-    <!-- Your entire original body remains unchanged below -->
-</body>
-</html>
 
 <body>
     <div id="snowfall"></div>
@@ -237,7 +239,6 @@
     </div>
 
     <script>
-        /* Scrollytelling code */
 
         d3.select("#step-one").on('stepin', function (e) {
             d3.select("#graph-main").style('display', 'block')
@@ -298,7 +299,7 @@
     </style>
 
     <script>
-        /* Snow flurries animation */
+    
         (function() {
             const container = document.getElementById('snowfall');
             const flakes = [];
