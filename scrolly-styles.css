@@ -57,22 +57,28 @@
 }
 
 @media (max-width: 768px) {
+    /* Graph pins to top of screen, compact */
     .sticky-thing {
-        height: 45vh;
+        height: 100vh;
+        align-items: flex-start;
+        padding-top: 1rem;
     }
 
     .sticky-thing img {
         max-width: 95%;
-        max-height: 40vh;
+        max-height: 38vh;
     }
 
+    /* Keep full overlap so scrollytelling works */
     .steps-container {
-        margin-top: -45vh;
+        margin-top: -100vh;
     }
 
+    /* Text cards sit at the bottom of the viewport */
     .step {
-        min-height: 70vh;
-        padding: 0.5em 1rem;
+        min-height: 100vh;
+        align-items: flex-end;
+        padding: 0 1rem 2rem;
     }
 
     .step:nth-child(odd) {
