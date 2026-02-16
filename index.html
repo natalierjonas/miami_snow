@@ -225,31 +225,21 @@
     </div>
 
     <script>
-
-        d3.select("#step-one").on('stepin', function (e) {
-            d3.select("#graph-main").style('display', 'block')
-            d3.select("#graph-whale").style('display', 'none')
-        })
-
-        d3.select("#step-two").on('stepin', function (e) {
-            d3.select("#graph-main").style('display', 'block')
-            d3.select("#graph-whale").style('display', 'none')
-        })
-
-        d3.select("#step-three").on('stepin', function (e) {
-            d3.select("#graph-main").style('display', 'none')
-            d3.select("#graph-whale").style('display', 'block')
-        })
-
-        d3.select("#step-four").on('stepin', function (e) {
-            d3.select("#graph-main").style('display', 'none')
-            d3.select("#graph-whale").style('display', 'block')
-        })
-    </script>
-
-    <script>
         (() => {
-            const scroller = scrollama()
+            const mainGraph = document.getElementById('graph-main');
+            const whaleGraph = document.getElementById('graph-whale');
+            const stepThree = document.getElementById('step-three');
+            const scroller = scrollama();
+
+            function showMain() {
+                mainGraph.style.display = 'block';
+                whaleGraph.style.display = 'none';
+            }
+
+            function showWhale() {
+                mainGraph.style.display = 'none';
+                whaleGraph.style.display = 'block';
+            }
 
             scroller
                 .setup({
@@ -259,20 +249,30 @@
                     debug: false,
                 })
                 .onStepEnter(function ({ element, index, direction }) {
-                    const event = new CustomEvent("stepin", { detail: { direction: direction } })
-                    element.dispatchEvent(event)
-                })
-                .onStepExit(function ({ element, index, direction }) {
-                    const event = new CustomEvent("stepout", { detail: { direction: direction } })
-                    element.dispatchEvent(event)
-                    if (direction === "up" && element.previousElementSibling) {
-                        const event = new CustomEvent("stepin", { detail: { direction: direction } })
-                        element.previousElementSibling.dispatchEvent(event)
+                    if (index >= 2) {
+                        showWhale();
+                    } else {
+                        showMain();
                     }
                 })
+                .onStepExit(function ({ element, index, direction }) {
+                    if (direction === "up" && index <= 2) {
+                        showMain();
+                    }
+                });
 
-            window.addEventListener("resize", scroller.resize)
-        })()
+            // Fallback scroll listener — toggles graphs directly by position
+            window.addEventListener('scroll', function () {
+                var rect = stepThree.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.6) {
+                    showWhale();
+                } else {
+                    showMain();
+                }
+            });
+
+            window.addEventListener("resize", scroller.resize);
+        })();
     </script>
 
     <script>
@@ -331,30 +331,6 @@
         })();
     </script>
 
-    <script>
-        // Direct scroll-based graph toggler (works on mobile independent of scrollama)
-        (function () {
-            var mainGraph = document.getElementById('graph-main');
-            var whaleGraph = document.getElementById('graph-whale');
-            var stepThree = document.getElementById('step-three');
-
-            function toggleGraphs() {
-                var rect = stepThree.getBoundingClientRect();
-                var trigger = window.innerHeight * 0.6;
-
-                if (rect.top < trigger) {
-                    mainGraph.style.display = 'none';
-                    whaleGraph.style.display = 'block';
-                } else {
-                    mainGraph.style.display = 'block';
-                    whaleGraph.style.display = 'none';
-                }
-            }
-
-            window.addEventListener('scroll', toggleGraphs);
-            toggleGraphs();
-        })();
-    </script>
 </body>
 
 </html>
