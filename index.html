@@ -199,7 +199,7 @@
     <section id="scrolly-images" class="scrolly-container">
         <div class="sticky-thing">
             <img id="graph-main" src="main_graph.png">
-            <img id="graph-whale" src="whale_graph.png">
+            <img id="graph-whale" src="whale_graph.png" style="display:none">
         </div>
         <div class="steps-container">
             <div class="step" id="step-one">
@@ -328,6 +328,31 @@
             }
 
             animate();
+        })();
+    </script>
+
+    <script>
+        // Direct scroll-based graph toggler (works on mobile independent of scrollama)
+        (function () {
+            var mainGraph = document.getElementById('graph-main');
+            var whaleGraph = document.getElementById('graph-whale');
+            var stepThree = document.getElementById('step-three');
+
+            function toggleGraphs() {
+                var rect = stepThree.getBoundingClientRect();
+                var trigger = window.innerHeight * 0.6;
+
+                if (rect.top < trigger) {
+                    mainGraph.style.display = 'none';
+                    whaleGraph.style.display = 'block';
+                } else {
+                    mainGraph.style.display = 'block';
+                    whaleGraph.style.display = 'none';
+                }
+            }
+
+            window.addEventListener('scroll', toggleGraphs);
+            toggleGraphs();
         })();
     </script>
 </body>
