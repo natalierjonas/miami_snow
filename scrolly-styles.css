@@ -1,0 +1,57 @@
+/* Scrollytelling styles */
+
+.scrolly-container {
+    position: relative;
+}
+
+.sticky-thing {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+}
+
+.sticky-thing img {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+.steps-container {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+    margin-top: -100vh;
+}
+
+.step {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    padding: 1em 10%;
+}
+
+/* Stagger steps left and right, closer to center */
+.step:nth-child(odd) {
+    justify-content: flex-start;
+    padding-left: 15%;
+}
+
+.step:nth-child(even) {
+    justify-content: flex-end;
+    padding-right: 15%;
+}
+
+.step > * {
+    background: rgba(240, 240, 240, 0.93);
+    padding: 0.8em 1.5em;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    pointer-events: auto;
+    font-size: 0.9em;
+}
