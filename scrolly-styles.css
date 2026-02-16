@@ -55,3 +55,38 @@
     pointer-events: auto;
     font-size: 0.9em;
 }
+
+@media (max-width: 768px) {
+    .sticky-thing {
+        height: 45vh;
+    }
+
+    .sticky-thing img {
+        max-width: 95%;
+        max-height: 40vh;
+    }
+
+    .steps-container {
+        margin-top: -45vh;
+    }
+
+    .step {
+        min-height: 70vh;
+        padding: 0.5em 1rem;
+    }
+
+    .step:nth-child(odd) {
+        justify-content: center;
+        padding-left: 1rem;
+    }
+
+    .step:nth-child(even) {
+        justify-content: center;
+        padding-right: 1rem;
+    }
+
+    .step > * {
+        max-width: 100%;
+        font-size: 0.85em;
+    }
+}
