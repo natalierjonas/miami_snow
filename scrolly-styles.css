@@ -57,11 +57,12 @@
 }
 
 @media (max-width: 768px) {
-    /* Graph sticks to top, only takes top 40% of screen */
+    /* Graph sticks to top, always visible above the text */
     .sticky-thing {
         height: 40vh;
         align-items: center;
         padding-top: 0;
+        z-index: 3;
     }
 
     .sticky-thing img {
