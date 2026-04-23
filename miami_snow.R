@@ -1,16 +1,7 @@
-require("tidyverse")
-library(tidyverse)
-library(lubridate)
+require(tidyverse)
 library(scales)
 library(ggplot2)
 library(dplyr)
-library(showtext)
-library(sysfonts)
-library(lubridate)
-
-showtext_auto()
-
-font_add_google("SN Pro", "pro")
 
 setwd('~/Desktop/vibe/miami_snow')
 miami <- read_csv("kalshi_miami.csv")
@@ -70,8 +61,6 @@ total_no_dollars #24976.78
 ## did an incredibly annoying scrape of Kalshi with Playwright
 
 ### found much better summary stats and info where I took into account the selling no/buying yes.
-
-## actual working, correct analysis and graph
 
 miami <- read_csv("scrape_kalshi.csv")
 
@@ -134,71 +123,73 @@ ggplot(miami,
     plot.subtitle = element_text(color = "#222021", size = 9, lineheight = 1)
   )
 
+# trying circle
 
-## more professional
+library(tidyverse)
+library(ggforce)
+library(packcircles)
+library(scales)
 
-ggplot(miami, aes(x = count,
-                  y = money_spent,
-                  color = outcome,
-                  size = money_spent)) +
-  geom_point(data = subset(miami, outcome == "Lose"),
-             alpha = 0.8) +
-  geom_point(data = subset(miami, outcome == "Win"),
-             alpha = 0.6) +
-  geom_hline(yintercept = avg_spend,
-             linetype = "dashed",
-             linewidth = 0.6,
-             color = "#3a3a3a") +
-  annotate("text",
-           x = max(miami$count) * 0.98,
-           y = avg_spend,
-           label = paste0("Average spend: ", dollar(avg_spend)),
-           hjust = 1, vjust = -0.6,
-           size = 3.3,
-           family = "pro",
-           color = "#3a3a3a") +
-  scale_color_manual(values = c("Lose" = "#d62828",
-                                "Win"  = "#2a9d8f")) +
-  scale_size_continuous(range = c(2, 10), guide = "none") +
-  scale_x_continuous(labels = label_comma(),
-                     expand = expansion(mult = c(0.02, 0.2))) +
-  scale_y_continuous(labels = label_dollar(),
-                     expand = expansion(mult = c(0, 0.12))) +
-  labs(title = "Why Was $431K Bet on Snow in Miami?",
-      subtitle = stringr::str_wrap(subtitle_text, width = 80),
-      caption = "Source: Kalshi",
-      x = "Number of Contracts",
-      y = NULL,
-      color = "Outcome") +
-  theme_minimal(base_size = 12) +
-  theme(text = element_text(family = "pro"),
-        plot.title = element_text(face = "bold",
-                                  size = 17,
-                                  hjust = 0.3,
-                                  margin = margin(b = 6)),
-        plot.subtitle = element_text(size = 10,
-                                     color = "#444444",
-                                     lineheight = 1.05,
-                                     margin = margin(b = 12)),
-        axis.title.x = element_text(size = 11, face = "bold"),
-        axis.text = element_text(size = 9),
-        plot.caption = element_text(color = "#222021", face = "bold"),
-        panel.grid.minor = element_blank(),
-        panel.grid.major.x = element_blank(),
-        legend.position = "right",
-        legend.title = element_text(face = "bold"),
-        legend.text = element_text(size = 9),
-        plot.margin = margin(15, 20, 15, 15))
+miami <- read_csv("scrape_kalshi.csv")
 
+miami <- miami %>%
+  mutate(
+    outcome = ifelse(tolower(taker_side) == "yes", "Lose", "Win"),
+    outcome = factor(outcome, levels = c("Lose", "Win")),
+    money_spent = price_dollars * count,
+    value = money_spent
+  )
+
+packing <- circleProgressiveLayout(miami$value, sizetype = "area")
+
+miami <- bind_cols(miami, packing)
+
+outer_r <- max(sqrt(miami$x^2 + miami$y^2) + miami$radius)
+
+circle <- ggplot(miami) +
+  geom_circle(aes(x0 = x,
+                  y0 = y,
+                  r = radius,
+                  fill = outcome),
+              color = NA,
+              alpha = 0.85) +
+  geom_circle(aes(x0 = x,
+                  y0 = y,
+                  r = radius,
+                  fill = outcome),
+                  color = NA,
+                  alpha = 0.85) +
+  scale_fill_manual(
+    values = c("Lose" = "#d62828",
+               "Win"  = "#28CC95")
+    ) +
+    coord_equal() +
+    theme_void() +
+    labs(
+    title = "Miami Snow Betting as a Circle Market",
+    subtitle = "Circle area = dollars spent | snug packing",
+    fill = "Outcome"
+  )
+  
+ggsave("miami_snow_plot.pdf", plot = circle)
 
 ## now, onto analyzing the whale, brand.range
 
-whale <- read.csv("brand_range.csv")
+library(tidyverse)
+library(scales)
+library(ggplot2)
+library(dplyr)
+library(ggforce)
+library(packcircles)
+
+setwd('~/Desktop/vibe/miami_snow')
 
 subtitle_two <- str_wrap(
-  "Kalshi is experiencing a windfall of investment from users like brand.range in “obvious markets,” such as snow in Miami. Why would anyone bet on the impossible?",
+  "Kalshi is experiencing a windfall of investment from users like brand.range in \"obvious markets,\" such as snow in Miami. Why would anyone bet on the impossible?",
   width = 100
 )
+
+whale <- read.csv("brand_range.csv")
 
 whale <- whale %>% 
   mutate(
@@ -209,11 +200,13 @@ whale <- whale %>%
 user_trades <- bind_rows(
   whale %>%
     filter(!is.na(maker_nickname)) %>%
-    transmute(user = maker_nickname, action = maker_action,
+    transmute(user = maker_nickname,
+              action = maker_action,
               count, price_dollars, ticker),
   whale %>%
     filter(!is.na(taker_nickname)) %>%
-    transmute(user = taker_nickname, action = taker_action,
+    transmute(user = taker_nickname,
+              action = taker_action,
               count, price_dollars, ticker)
 )
 
@@ -232,19 +225,17 @@ user_summary <- user_trades %>%
     total_volume = contracts_bought + contracts_sold
   )
 
-# Separate brand.range from others
-br     <- user_summary %>% filter(user == "brand.range")
+br <- user_summary %>% filter(user == "brand.range")
 others <- user_summary %>% filter(user != "brand.range")
 
-# Label for brand.range
 br_label <- paste0(
   "brand.range\n",
   scales::comma(br$contracts_bought), " contracts bought ($", sprintf("%.2f", br$dollars_spent), ")\n",
-  scales::comma(br$contracts_sold),   " contracts sold ($", sprintf("%.2f", br$dollars_earned), ")\n",
+  scales::comma(br$contracts_sold), " contracts sold ($", sprintf("%.2f", br$dollars_earned), ")\n",
   "Net P&L: ", scales::dollar(br$net_pnl)
 )
 
-ggplot(user_summary, aes(x = contracts_bought, y = contracts_sold)) +
+brgraph <- ggplot(user_summary, aes(x = contracts_bought, y = contracts_sold)) +
   geom_point(data = others,
              aes(size = total_volume),
              color = "#B0BEC5", alpha = 0.5) +
@@ -255,20 +246,23 @@ ggplot(user_summary, aes(x = contracts_bought, y = contracts_sold)) +
   annotate("text",
            x = mean(others$contracts_bought),
            y = mean(others$contracts_sold),
-           label = "AVG USER", fontface = "bold",
-           size = 3.2, color = "#444444", vjust = -2, hjust = 0.5) +
+           label = "AVG USER",
+           fontface = "bold",
+           size = 3.2,
+           color = "#444444",
+           vjust = -2,
+           hjust = 0.5) +
   geom_point(data = br, color = "#C62828", size = 14) +
   geom_label(
     data = br,
     aes(x = contracts_bought, y = contracts_sold, label = br_label),
-    hjust = 1,       
-    vjust = 1.5,    
+    hjust = 1,
+    vjust = 1.5,
     size = 3,
     fill = "#FFF8E1",
     color = "#444444",
-    label.padding = unit(0.3, "lines"),
-    family = "pro"
-  ) +  
+    label.padding = unit(0.3, "lines")
+  ) +
   scale_x_continuous(
     trans = scales::pseudo_log_trans(),
     breaks = c(0, 10, 100, 1000, 10000, 70000),
@@ -283,7 +277,7 @@ ggplot(user_summary, aes(x = contracts_bought, y = contracts_sold)) +
   ) +
   scale_size_continuous(range = c(1.5, 12), guide = "none") +
   labs(
-    title    = "The Whale of Miami Snow Betting",
+    title = "The Whale of Miami Snow Betting",
     subtitle = subtitle_two,
     caption = "Source: Kalshi",
     x = "Contracts Bought",
@@ -291,22 +285,86 @@ ggplot(user_summary, aes(x = contracts_bought, y = contracts_sold)) +
   ) +
   theme_minimal(base_size = 12) +
   theme(
-    text = element_text(family = "pro"),
-    plot.title = element_text(face = "bold",
-                              size = 17,
-                              hjust = 0.3,
+    text = element_text(family = "sans"),
+    plot.title = element_text(face = "bold", size = 17, hjust = 0.3,
                               margin = margin(b = 6)),
-    plot.subtitle = element_text(size = 10,
-                                 color = "#444444",
+    plot.subtitle = element_text(size = 10, color = "#444444",
                                  lineheight = 1.05,
                                  margin = margin(b = 12)),
     axis.title.x = element_text(size = 11, face = "bold"),
     axis.text.x = element_text(size = 9),
     axis.text.y = element_text(size = 9),
-    axis.title.y = element_text(size = 11, face = "bold", margin = margin(r = 1)),
+    axis.title.y = element_text(size = 11, face = "bold",
+                                margin = margin(r = 1)),
     panel.grid.minor = element_blank(),
     panel.grid.major.x = element_blank(),
     legend.title = element_text(face = "bold"),
     legend.text = element_text(size = 9),
     plot.caption = element_text(color = "#222021", face = "bold")
   )
+
+brgraph
+
+ggsave("brand1_plot.pdf", plot = brgraph)
+
+# subset for zoom in
+
+library(tidyverse)
+library(scales)
+library(ggplot2)
+
+whale <- read.csv("brand_range.csv")
+
+whale <- whale %>%
+  mutate(
+    maker_nickname = na_if(maker_nickname, ""),
+    taker_nickname = na_if(taker_nickname, "")
+  )
+
+user_trades <- bind_rows(
+  whale %>%
+    filter(!is.na(maker_nickname)) %>%
+    transmute(user = maker_nickname,
+              action = maker_action,
+              count, price_dollars, ticker),
+  whale %>%
+    filter(!is.na(taker_nickname)) %>%
+    transmute(user = taker_nickname,
+              action = taker_action,
+              count, price_dollars, ticker)
+)
+
+user_summary <- user_trades %>%
+  group_by(user) %>%
+  summarize(
+    contracts_bought = sum(if_else(action == "buy", count, 0)),
+    contracts_sold   = sum(if_else(action == "sell", count, 0)),
+    total_volume     = sum(count),
+    .groups = "drop"
+  )
+
+zoom_data <- user_summary %>%
+  filter(contracts_sold < 10)
+
+brzoom <- ggplot(zoom_data, aes(x = contracts_bought, y = contracts_sold)) +
+  geom_point(aes(size = total_volume),
+             color = "#939799",
+             alpha = 0.6) +
+  scale_size_continuous(range = c(2, 10), guide = "none") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = comma, limits = c(0, 10)) +
+  labs(
+    title = "Zoom: Low-Volume Sellers (<10 contracts)",
+    x = "Contracts Bought",
+    y = "Contracts Sold"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank()
+  )
+
+brzoom
+
+ggsave("brzoom_plot.pdf", plot = brzoom)
+
