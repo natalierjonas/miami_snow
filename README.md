@@ -7,7 +7,7 @@ In this project, I analyzed the #1 buyer in this market, a user named *brand.ran
 
 ## But, why are people trading on the *obvious?*
 
-The data presented was scraped from Kalshi's January 2026, [Miami snow market](https://kalshi.com/markets/kxmiasnowm/chicago-snowfall-monthly/kxmiasnowm-26jan?sortMarkets=alphabetical-asc). Cleaning, analysis and plotting was all conducted in R, VS Code and Claude Code.
+The data presented was scraped from Kalshi's January 2026, [Miami snow market](https://kalshi.com/markets/kxmiasnowm/chicago-snowfall-monthly/kxmiasnowm-26jan?sortMarkets=alphabetical-asc). Cleaning, analysis and plotting was all conducted in R, VS Code and Claude Code. I used Adobe Illustrator to further stylize the graphs.
 
 Kalshi bets aren't easily parsed — the site (largely) blocks scraping attempts to encourage use of their API. In addition, *buying YES* equates to *selling NO*, meaning the two had to be considered one. The cleaning of the scraped data included making this distinction. 
 
