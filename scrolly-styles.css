@@ -2,48 +2,58 @@
 
 .scrolly-container {
     position: relative;
+    display: flex;
+    align-items: flex-start;
 }
 
 .sticky-thing {
     position: sticky;
     top: 0;
     height: 100vh;
-    width: 100%;
+    width: 62%;
+    order: 2;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #ffffff;
+    flex-shrink: 0;
 }
 
 .sticky-thing img {
-    max-width: 90%;
-    max-height: 90vh;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
+    padding: 1.5em;
+    box-sizing: border-box;
 }
 
 .steps-container {
+    width: 38%;
+    order: 1;
+    flex-shrink: 0;
     position: relative;
     z-index: 2;
-    pointer-events: none;
-    margin-top: -100vh;
+    padding: 2em 2em 2em 3.5em;
+    box-sizing: border-box;
 }
 
 .step {
-    min-height: 90vh;
+    min-height: 80vh;
     display: flex;
     align-items: center;
-    padding: 1em 10%;
+    padding: 0;
+    margin-bottom: 0;
 }
 
-/* Stagger steps left and right, closer to center */
-.step:nth-child(odd) {
-    justify-content: flex-start;
-    padding-left: 15%;
+.step:last-child {
+    min-height: 50vh;
 }
 
+.step:nth-child(odd),
 .step:nth-child(even) {
-    justify-content: flex-end;
-    padding-right: 15%;
+    justify-content: flex-start;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .step > * {
@@ -51,46 +61,51 @@
     padding: 0.8em 1.5em;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    max-width: 450px;
+    max-width: 100%;
     pointer-events: auto;
     font-size: 0.9em;
 }
 
 @media (max-width: 768px) {
-    /* Graph sticks to top, always visible above the text */
+    .scrolly-container {
+        display: block;
+    }
+
     .sticky-thing {
+        position: sticky;
+        top: 0;
         height: 40vh;
-        align-items: center;
-        padding-top: 0;
+        width: 100%;
+        order: unset;
         z-index: 3;
+        padding-top: 0;
     }
 
     .sticky-thing img {
         max-width: 95%;
         max-height: 36vh;
+        width: auto;
+        height: auto;
+        padding: 0;
     }
 
-    /* No overlap — text flows below the sticky graph */
     .steps-container {
+        width: 100%;
+        order: unset;
         margin-top: 0;
+        padding: 0 1rem;
     }
 
     .step {
         min-height: 80vh;
         align-items: flex-start;
-        padding: 1em 1rem;
+        padding: 1em 0;
         margin-bottom: 0;
     }
 
     .step:last-child {
+        min-height: auto;
         margin-bottom: 0;
-    }
-
-    .step:nth-child(odd),
-    .step:nth-child(even) {
-        justify-content: center;
-        padding-left: 1rem;
-        padding-right: 1rem;
     }
 
     .step > * {
